@@ -24,10 +24,25 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+// Send the current date as unix and utc if there is no date parameter provided
 app.get("/api",function(req,res){
-
-  res.json({unix:5,utc: new Date()})
+  res.json({unix:Date.now(),utc: new Date()})
 });
+
+app.get("/api/:date?",function(req,res){
+  // This obtains the date string that the user passed.
+  // The req params object looks like  {date:__datestring__}
+  const date=req.params.date;
+  // Try to get a valid date in two ways. If it doesn't work, print the error
+  var dateObject=new Date(date);
+  if(dateObject=="Invalid Date"){
+    dateObject=new Date(date*1);
+    if(dateObject=="Invalid Date"){
+      res.json({error: "Invalid Date"});
+    }
+  }
+    res.json({unix:Number(dateObject.getTime()),utc: dateObject.toUTCString()})
+})
 
 
 
