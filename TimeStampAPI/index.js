@@ -35,13 +35,18 @@ app.get("/api/:date?",function(req,res){
   const date=req.params.date;
   // Try to get a valid date in two ways. If it doesn't work, print the error
   var dateObject=new Date(date);
+  // If the date isn't given as a date string, check if its a utc timestamp. If not, its invalid so send an error to the server
   if(dateObject=="Invalid Date"){
     dateObject=new Date(date*1);
     if(dateObject=="Invalid Date"){
       res.json({error: "Invalid Date"});
     }
   }
+  if(dateObject!="Invalid Date"){
+    // Send the unix and utc dates to the client
     res.json({unix:Number(dateObject.getTime()),utc: dateObject.toUTCString()})
+  }
+  
 })
 
 
