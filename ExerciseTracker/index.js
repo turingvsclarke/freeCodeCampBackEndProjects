@@ -18,7 +18,11 @@ app.get('/', (req, res) => {
 app.post('/api/users',(req,res)=>{
   // Create new user
   let newUser={username:req.body.username,_id:id++}
-  users.push(newUser);
+  // Need to check to see if that username has already been created
+  let user=users.filter(user=>user.username==newUser.username);
+  if(user.length==0){
+    users.push(newUser);
+  }
   res.json(newUser);
 })
 
